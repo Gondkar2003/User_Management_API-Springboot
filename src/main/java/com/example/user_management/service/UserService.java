@@ -46,4 +46,8 @@ public class UserService{
         userRepository.deleteById(id);
     }
 
+    public User getUserByName(String name){
+        return userRepository.findByName(name)
+            .orElseThrow(()->new ResourceNotFoundException("User not found with name:" +name));
+    }
 }

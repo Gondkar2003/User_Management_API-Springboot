@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.user_management.model.User;
 import com.example.user_management.service.UserService;
+// import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -31,12 +35,12 @@ public class UserController{
     }
 
     @PostMapping("/add")
-    public ResponseEntity<User> addUser(@RequestBody User user){
+    public ResponseEntity<User> addUser(@Valid @RequestBody User user){
         User newUser=userService.addUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
-    @GetMapping("/{id}") 
+    @GetMapping("/id/{id}") 
         public ResponseEntity<User> getUserById(@PathVariable("id") Long id){
             User user=userService.getUserById(id);
             return ResponseEntity.ok(user);
@@ -52,6 +56,12 @@ public class UserController{
     public ResponseEntity<Void> deleteUser(@PathVariable("id")Long id){
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<User> getUserByName(@PathVariable("name") String name){
+        User user=userService.getUserByName(name);
+        return ResponseEntity.ok(user);
     }
 }
 
