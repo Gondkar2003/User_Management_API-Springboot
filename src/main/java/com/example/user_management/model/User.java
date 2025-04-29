@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 @Entity
@@ -18,14 +19,17 @@ public class User{
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long user_id;
 
+    @NotBlank(message="User name is mandatory")
     @Column(name="user_name")
     private String name;
 
+    @NotBlank(message = "Email is mandatory")
     @Column(name="email", nullable=false, unique=true)
-    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Invalid email format")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Invalid email format")
     @Schema(description="Email address of user", example="jonhdoe@test.com")
     private String email;
 
+    @NotBlank(message = "Password is mandatory")
     @Column(name="password", nullable=false)
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}", message = "Password must contain at least 8 characters, including uppercase, lowercase and a number")
     @Schema(description = "Pasword of the user", example = "Abc@1234")
