@@ -63,6 +63,8 @@
 //         return new BCryptPasswordEncoder();
 //     }
 // }
+
+
 package com.example.user_management.config;
 
 import org.springframework.context.annotation.Bean;
@@ -82,7 +84,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
             .authorizeHttpRequests(authorize -> authorize  // Use the updated method name
-                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api/auth/login","/api/users","/api/users/add").permitAll()  // Allow login without authentication
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api/auth/login","/api/users","/api/users/add","/api/users/{id}").permitAll()  // Allow login without authentication
                 .anyRequest().authenticated()  // Other requests need to be authenticated
             )
             .formLogin().disable(); // Disable form-based login for simplicity, as basic auth is also disabled.

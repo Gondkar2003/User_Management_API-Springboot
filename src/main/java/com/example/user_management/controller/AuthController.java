@@ -1,6 +1,7 @@
 // package com.example.user_management.controller;
 
 // import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.http.ResponseEntity;
 // import org.springframework.security.crypto.password.PasswordEncoder;
 // import org.springframework.web.bind.annotation.*;
 
@@ -34,13 +35,13 @@
 package com.example.user_management.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.user_management.model.User;
 import com.example.user_management.repository.UserRepository;
 import com.example.user_management.security.JwtUtil;
-import com.example.user_management.dto.LoginRequest;
 import com.example.user_management.exception.ResourceNotFoundException;
 
 @RestController
@@ -54,18 +55,19 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUtil jwtUtil; // Inject JwtUtil for generating tokens
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) {
-        // Find the user by email
-        User user = userRepository.findByEmail(loginRequest.getEmail())
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
+        // Find user by email
+        User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new ResourceNotFoundException("Invalid email or password"));
 
         // Check if password matches
-        if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            // Generate JWT token and return it
-            return jwtUtil.generateToken(user.getEmail());
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            // Generate the JWT token
+            String token = jwtUtil.generateToken(user.getEmail());
+            return ResponseEntity.ok("Login successful! Token: " + token); // Send the token in the response
         } else {
             throw new ResourceNotFoundException("Invalid email or password");
         }
